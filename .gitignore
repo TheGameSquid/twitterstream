@@ -1,0 +1,29 @@
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
+tmp
+
+class
+*.log
+
+# sbt specific
+.cache
+.history
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+logs
+project/project
+project/target
+
+# IntelliJ Specific
+*.iml
+*.ipr
+*.iws
+.idea
+out
