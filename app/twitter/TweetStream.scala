@@ -1,18 +1,18 @@
 package twitter
 
-import akka.actor.Actor
+import akka.actor.{Props, ActorSystem}
 import play.api.libs.iteratee.{Iteratee, Concurrent}
 import play.api.libs.json.Json
 import play.api.libs.oauth.{ OAuthCalculator, ConsumerKey, RequestToken }
-import play.api.libs.ws.{ WSResponseHeaders, WS }
-import play.api.Play.current
+import play.api.libs.ws.WSResponseHeaders
 
 object TweetStream {
-	/** Indicates that the TweetStreamActor should start the WS connection to Twitter **/
-	case object TweetStreamStart
-
 	val twitterUrl = "https://stream.twitter.com/1.1/statuses/filter.json?track="
 	val twitterTopics = "angularjs,playframework,elasticsearch"
+
+	/** The TweetStream system and its actors **/
+	val system = ActorSystem("TweetStream")
+	val streamActor = system.actorOf(Props[TweetStreamActor], "TweetSteamer")
 
 	/** ConsumerKey and AccessToken for Twitter API obtained by registering an application
 	  * at dev.twitter.com */
@@ -55,20 +55,4 @@ object TweetStream {
 	}
 }
 
-class TweetStreamActor extends Actor {
-	// We're using the default Play! executioncontext
-	import play.api.libs.concurrent.Execution.Implicits.defaultContext
-	import TweetStream._
 
-	def receive = {
-		case TweetStreamStart => {
-			WS.url(twitterUrl + twitterTopics)
-				// FIXME: This should be set to -1 once Play bug gets fixed, GitHub issue 4846
-				.withRequestTimeout(Long.MaxValue)
-				// Sign the Request, because Twitter requires oAuth
-				.sign(OAuthCalculator(consumerKey, accessToken))
-				// Get the stream, and then consume it with the tweetIteratee
-				.get(TweetStream.tweetIteratee)
-		}
-	}
-}
