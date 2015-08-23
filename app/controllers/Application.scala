@@ -8,7 +8,7 @@ import twitter.TweetStream
 class Application extends Controller {
 
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Ok(views.html.index("TwitterStream - A Reactive Application by TheGameSquid"))
   }
 
   def feed = Action {
