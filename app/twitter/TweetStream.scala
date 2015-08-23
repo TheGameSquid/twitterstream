@@ -2,9 +2,11 @@ package twitter
 
 import akka.actor.{Props, ActorSystem}
 import play.api.libs.iteratee.{Enumeratee, Iteratee, Concurrent}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.libs.oauth.{ OAuthCalculator, ConsumerKey, RequestToken }
 import play.api.libs.ws.WSResponseHeaders
+
+import scala.util.{Failure, Success}
 
 object TweetStream {
 	val twitterUrl = "https://stream.twitter.com/1.1/statuses/filter.json?track="
@@ -35,6 +37,8 @@ object TweetStream {
 	def tweetIteratee(headers: WSResponseHeaders): Iteratee[Array[Byte], Unit] = {
 		// We're using the default Play! executioncontext
 		import play.api.libs.concurrent.Execution.Implicits.defaultContext
+		// Import the implicit conversion for Json -> Tweet
+		import Tweet.tweetReads
 
 		if (headers.status == 200) {
 			println("Twitter request returned 200")
@@ -52,8 +56,12 @@ object TweetStream {
 						try {
 							val jsonTweet = Json.parse(buffer.toString())
 							println(Json.prettyPrint(jsonTweet))
-							// Push the new Tweet into the channel
-							tweetChannel.push(Tweet(jsonTweet))
+
+							jsonTweet.validate[Tweet] match {
+								case s: JsSuccess[Tweet] => tweetChannel.push(s.get)
+								case e: JsError => println("Unable to validate JsValue as JSON Tweet")
+							}
+
 							// Clear the buffer
 							buffer.clear()
 						}
@@ -74,7 +82,9 @@ object TweetStream {
 	def tweetToJson: Enumeratee[Tweet, JsValue] = {
 		// We're using the default Play! executioncontext
 		import play.api.libs.concurrent.Execution.Implicits.defaultContext
-		Enumeratee.map[Tweet]{ tweet => Json.obj("text" -> tweet.json).as[JsValue]  }
+		// Import the implicit conversion for Tweet -> Json
+		import Tweet.tweetWrites
+		Enumeratee.map[Tweet]{ Json.toJson(_) }
 	}
 }
 
