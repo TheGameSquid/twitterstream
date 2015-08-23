@@ -6,11 +6,6 @@ import play.api.mvc._
 import twitter.TweetStream
 
 class Application extends Controller {
-
-  def index = Action {
-    Ok(views.html.index("TwitterStream - A Reactive Application by TheGameSquid"))
-  }
-
   def feed = Action {
     Ok.feed(
       // tweetStreamOut -> Enumerator (Producer)
