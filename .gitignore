@@ -27,3 +27,7 @@ project/target
 *.iws
 .idea
 out
+
+# Bower & Node
+bower_components
+node_modules
