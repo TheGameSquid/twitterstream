@@ -28,11 +28,10 @@ project/target
 .idea
 out
 
-# Bower & Node
+# Bower & Node & tsd
 bower_components
 node_modules
-/node_modules
 /dist
 /.tmp
 /.sass-cache
-/bower_components
+typings

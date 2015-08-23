@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('twitterstream', []);
+angular.module('twitterstream', ['twitterstream.controllers', 'twitterstream.services']);

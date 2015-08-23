@@ -11,3 +11,4 @@ GET     /ui                         com.tuplejump.playYeoman.Yeoman.index
 # Map static resources from the /public folder to the /assets URL path
 ## Removed -- Angular front-end is now in place
 ## GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /*file                      controllers.Assets.versioned(path="/ui", file: Asset)

@@ -3,8 +3,19 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/controllers.js"></script>
+    <script src="scripts/services/services.js"></script>
   </head>
-  <body >
+  <body data-ng-app="twitterstream">
     Hello jerks
+    <br>
+    <div data-ng-controller="tweetController">
+      <div data-ng-repeat="tweet in tweets">
+        {{tweet}}
+      </div>
+    </div>
   </body>
 </html>
