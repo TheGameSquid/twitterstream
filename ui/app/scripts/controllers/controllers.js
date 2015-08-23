@@ -6,13 +6,12 @@ angular.module('twitterstream.controllers', ['twitterstream.services'])
 	.controller('tweetController', ['$scope', 'tweetService', function($scope, tweetService) {
 		$scope.tweets = [];
 		
-		$scope.$watch(
-			function() {
-				return tweetService.getTweets();
-			},
-			function(newVal, oldVal) {
-				$scope.tweets = newVal;
-				$scope.$apply();
+		tweetService.getTweets(function(response) {
+        	var tweet = JSON.parse(response.data);
+			if ($scope.tweets.length == 100) {
+				$scope.tweets.pop();
 			}
-		);
+          	$scope.tweets.unshift(tweet);
+			$scope.$apply();
+      	});
 	}]);

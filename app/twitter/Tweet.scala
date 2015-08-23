@@ -30,7 +30,7 @@ object Tweet {
 		(JsPath \ "created_at").write[String] and
 		(JsPath \ "created_at_ms").write[String] and
 		(JsPath \ "text").write[String] and
-		(JsPath \ "user_name").write[String] and
-		(JsPath \ "user_screen").write[String]
+		(JsPath \ "name_user").write[String] and
+		(JsPath \ "name_screen").write[String]
 	)(unlift(Tweet.unapply))
 }

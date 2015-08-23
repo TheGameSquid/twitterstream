@@ -6,18 +6,24 @@ angular.module('twitterstream.services', [])
 	.factory('tweetService', function() {
 		var tweets = [];
 		var tweetFeed = new EventSource("/feed");
-        tweetFeed.addEventListener("message", feedCallback, false);
+        //tweetFeed.addEventListener("message", feedCallback, false);
+		
+		//return {
+        //	getTweets: getTweets
+    	//};
+
+		//function getTweets() {
+		//	return tweets;
+		//}		
+		
+		//function feedCallback(message) {
+		//	var tweet = JSON.parse(message.data);
+		//	tweets.push(tweet);
+		//}
 		
 		return {
-        	getTweets: getTweets
-    	};
-
-		function getTweets() {
-			return tweets;
-		}		
-		
-		function feedCallback(message) {
-			var tweet = JSON.parse(message.data);
-			tweets.push(tweet);
-		}
+       		getTweets: function(callback) {
+         		tweetFeed.addEventListener("message", callback, false);
+			}
+		}; 
 	})

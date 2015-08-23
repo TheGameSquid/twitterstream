@@ -4,20 +4,29 @@
     <meta charset="utf-8">
     <title></title>
     
+    <script src="bower_components/moment/moment.js"></script>
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/controllers.js"></script>
     <script src="scripts/services/services.js"></script>
   </head>
   <body data-ng-app="twitterstream">
-    Hello jerks
-    <br>
     <div data-ng-controller="tweetController">
-      <ul>
-        <li data-ng-repeat="tweet in tweets">
-          {{tweet.text}}
-        </li>
-      </ul>    
+      <div class="tweet" data-ng-repeat="tweet in tweets">
+        <span am-time-ago="tweet.created_at"></span>
+        <!-- <span am-time-ago="tweet.created_at_ms" am-preprocess="unix"></span> -->
+        <span>
+          <a data-ng-href="http://www.twitter.com/{{tweet.name_screen}}" target="_blank">
+            <img className="thumbnail" src="https://pbs.twimg.com/profile_images/458757395099811840/WckL83i8.jpeg" />
+          </a>
+        </span>
+        <a href="http://www.twitter.com/{{tweet.name_screen}}" target="_blank">
+          <span className="tweet-username">{{tweet.name_user}}</span>
+        </a>
+        <span className="tweet-screenname">@{{tweet.name_screen}}</span>
+        <div className="tweet-time-ago" am-time-ago="tweet.created_at"/>
+      </div>
     </div>
   </body>
 </html>
