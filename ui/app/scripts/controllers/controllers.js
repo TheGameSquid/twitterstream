@@ -11,6 +11,7 @@ angular.module('twitterstream.controllers', ['twitterstream.services'])
 			if ($scope.tweets.length == 100) {
 				$scope.tweets.pop();
 			}
+			tweet.created_at_unix = tweet.created_at_ms.slice(0, -3)
           	$scope.tweets.unshift(tweet);
 			$scope.$apply();
       	});
