@@ -13,9 +13,11 @@
     Hello jerks
     <br>
     <div data-ng-controller="tweetController">
-      <div data-ng-repeat="tweet in tweets">
-        {{tweet}}
-      </div>
+      <ul>
+        <li data-ng-repeat="tweet in tweets">
+          {{tweet.text}}
+        </li>
+      </ul>    
     </div>
   </body>
 </html>

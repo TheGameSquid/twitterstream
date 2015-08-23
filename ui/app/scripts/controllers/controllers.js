@@ -8,11 +8,11 @@ angular.module('twitterstream.controllers', ['twitterstream.services'])
 		
 		$scope.$watch(
 			function() {
-				return tweetService.getTweets;
+				return tweetService.getTweets();
 			},
 			function(newVal, oldVal) {
-				console.log("New value: " + newVal);
 				$scope.tweets = newVal;
+				$scope.$apply();
 			}
 		);
 	}]);

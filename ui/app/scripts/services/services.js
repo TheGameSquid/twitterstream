@@ -5,6 +5,8 @@
 angular.module('twitterstream.services', [])
 	.factory('tweetService', function() {
 		var tweets = [];
+		var tweetFeed = new EventSource("/feed");
+        tweetFeed.addEventListener("message", feedCallback, false);
 		
 		return {
         	getTweets: getTweets
@@ -12,14 +14,10 @@ angular.module('twitterstream.services', [])
 
 		function getTweets() {
 			return tweets;
-		}
-		
-		var tweetFeed = new EventSource("/feed");
-        tweetFeed.addEventListener("message", feedCallback, false);
+		}		
 		
 		function feedCallback(message) {
 			var tweet = JSON.parse(message.data);
-			console.log("Received callback")
 			tweets.push(tweet);
 		}
 	})
