@@ -12,9 +12,10 @@ class TweetStreamActor extends Actor {
 
 	def receive = {
 		case TweetStreamStart => {
+			println("Starting the Twitter Stream")
 			WS.url(TweetStream.twitterUrl + TweetStream.twitterTopics)
 				// FIXME: This should be set to -1 once Play bug gets fixed, GitHub issue 4846
-				.withRequestTimeout(Long.MaxValue)
+				.withRequestTimeout(2147483647)
 				// Sign the Request, because Twitter requires oAuth
 				.sign(OAuthCalculator(TweetStream.consumerKey, TweetStream.accessToken))
 				// Get the stream, and then consume it with the tweetIteratee

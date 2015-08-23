@@ -1,14 +1,16 @@
 package twitter
 
 import akka.actor.{Props, ActorSystem}
-import play.api.libs.iteratee.{Iteratee, Concurrent}
-import play.api.libs.json.Json
+import play.api.libs.iteratee.{Enumeratee, Iteratee, Concurrent}
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.oauth.{ OAuthCalculator, ConsumerKey, RequestToken }
 import play.api.libs.ws.WSResponseHeaders
 
 object TweetStream {
 	val twitterUrl = "https://stream.twitter.com/1.1/statuses/filter.json?track="
+	//val twitterUrl = "https://stream.twitter.com/1.1/statuses/sample.json"
 	val twitterTopics = "angularjs,playframework,elasticsearch"
+	//val twitterTopics = ""
 
 	/** The TweetStream system and its actors **/
 	val system = ActorSystem("TweetStream")
@@ -35,15 +37,30 @@ object TweetStream {
 		import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 		if (headers.status == 200) {
+			println("Twitter request returned 200")
+			// The StringBuilder servers as a buffer between the different chunks
+			val buffer = new StringBuilder()
 			Iteratee.foreach[Array[Byte]] {
 				chunk => {
-					// Convert the ByteArray chunk to a UTF-8 string, then parse some JSON
+					println("Handling received chunk")
 					val chunkString = new String(chunk, "UTF-8")
-					val jsonTweet = Json.parse(chunkString)
-					println(Json.prettyPrint(jsonTweet))
+					buffer append chunkString
+					println(chunkString)
 
-					// Push the new Tweet into the channel
-					tweetChannel.push(Tweet(jsonTweet))
+					// This means we're at the end of the message
+					if (chunkString.takeRight(2) == "\r\n" && chunkString.length > 2) {
+						try {
+							val jsonTweet = Json.parse(buffer.toString())
+							println(Json.prettyPrint(jsonTweet))
+							// Push the new Tweet into the channel
+							tweetChannel.push(Tweet(jsonTweet))
+							// Clear the buffer
+							buffer.clear()
+						}
+						catch {
+							case _ => println("Something went wrong while converting the chunk")
+						}
+					}
 				}
 			}
 		}
@@ -52,6 +69,12 @@ object TweetStream {
 			println("Something failed with the Twitter Connection ")
 			Iteratee.foreach[Array[Byte]] { chunk => println(new String(chunk, "UTF-8"))}
 		}
+	}
+
+	def tweetToJson: Enumeratee[Tweet, JsValue] = {
+		// We're using the default Play! executioncontext
+		import play.api.libs.concurrent.Execution.Implicits.defaultContext
+		Enumeratee.map[Tweet]{ tweet => Json.obj("text" -> tweet.json).as[JsValue]  }
 	}
 }
 
