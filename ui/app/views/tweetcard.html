@@ -2,15 +2,15 @@
     <span>
         <a tooltip-placement="bottom" tooltip="Visit Twitter profile" 
             data-ng-href="http://www.twitter.com/{{tweet.name_screen}}" target="_blank">
-            <img className="thumbnail" src="https://pbs.twimg.com/profile_images/458757395099811840/WckL83i8.jpeg" />
+            <img class="tweet-thumbnail" src="https://pbs.twimg.com/profile_images/458757395099811840/WckL83i8.jpeg" />
         </a>
     </span>
     
     <a tooltip-placement="bottom" tooltip="Visit Twitter profile" 
         data-ng-href="http://www.twitter.com/{{tweet.name_screen}}" target="_blank">
-        <span className="tweet-username">{{tweet.name_user}}</span>
+        <span class="tweet-username">{{tweet.name_user}}</span>
     </a>
-    <span className="tweet-screenname">@{{tweet.name_screen}}</span>
-    <div className="tweet-time-ago" am-time-ago="tweet.created_at_unix"></div>
-    <div className="tweet-text">{{tweet.text}}</div>
+    <span class="tweet-screenname">@{{tweet.name_screen}}</span>
+    <span class="tweet-time-ago" am-time-ago="tweet.created_at_unix"></span>
+    <div class="tweet-text">{{tweet.text}}</div>
 </div>

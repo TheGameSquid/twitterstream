@@ -11,25 +11,26 @@ a {
     overflow: auto;
 }
 
-.username {
+.tweet-username {
     padding-left: 10px;
     font-weight: bold;
     font-size: 12px;
 }
 
-.username_screen {
+.tweet-screenname {
     font-size: 10px;
     color: #999;
 }
 
-.timeInterval {
+.tweet-time-ago {
     padding-top: 2px;
     font-size: 10px;
     color:#999;
     text-align: right;
+    float: right;
 }
 
-.thumbnail {
+.tweet-thumbnail {
     padding-right: 5px;
     margin-top: 5px;
     width: 64px;
