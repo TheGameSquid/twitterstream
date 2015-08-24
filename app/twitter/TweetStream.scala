@@ -11,8 +11,7 @@ import scala.util.{Failure, Success}
 object TweetStream {
 	val twitterUrl = "https://stream.twitter.com/1.1/statuses/filter.json?track="
 	//val twitterUrl = "https://stream.twitter.com/1.1/statuses/sample.json"
-	//val twitterTopics = "angularjs,playframework,elasticsearch"
-	val twitterTopics = "angularjs,playframework,elasticsearch,node,node.js,java,javascript"
+	val twitterTopics = "haskell,closure,scala,node.js,javascript,golang,angularjs,reactjs"
 
 	/** The TweetStream system and its actors **/
 	val system = ActorSystem("TweetStream")

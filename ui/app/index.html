@@ -3,19 +3,26 @@
   <head>
     <meta charset="utf-8">
     <title>TwitterStream!</title>
-    <link rel="stylesheet" media="screen" href="styles/main.css">
     <link rel="stylesheet" media="screen" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" media="screen" href="styles/main.css">
+    <link rel="stylesheet" media="screen" href="styles/animations.css">
     <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-moment/angular-moment.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="scripts/app.js"></script>
+    <script src="scripts/js/animations.js"></script>
     <script src="scripts/controllers/controllers.js"></script>
     <script src="scripts/directives/directives.js"></script>
     <script src="scripts/services/services.js"></script>
   </head>
   <body data-ng-app="twitterstream">
+    <div class="jumbotron" align="center">
+      <h1>Welcome to TwitterStream!</h1>
+    </div>
     <div data-ng-controller="tweetController">
-      <div class="col-lg-4" id="tweet-frame">
+      <div class="col-lg-4 view-container" id="tweet-frame">
         <div class="tweet-card" data-ng-repeat="tweet in tweets" data-tweet="tweet">
           <!--
           <span>

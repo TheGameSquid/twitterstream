@@ -2,7 +2,7 @@
     <span>
         <a tooltip-placement="bottom" tooltip="Visit Twitter profile" 
             data-ng-href="http://www.twitter.com/{{tweet.name_screen}}" target="_blank">
-            <img class="tweet-thumbnail" src="https://pbs.twimg.com/profile_images/458757395099811840/WckL83i8.jpeg" />
+            <img class="tweet-thumbnail" data-ng-src="{{tweet.image_url}}" />
         </a>
     </span>
     

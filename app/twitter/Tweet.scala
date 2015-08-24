@@ -12,7 +12,8 @@ case class Tweet(
 	createdAtMs: String,			// "timestamp_ms"
 	text: String,					// "text"
 	userName: String,				// "user": { ... , ... , "name": "Joe", ... }
-	screenName: String				// "user": { ... , ... , "screen_name": "therealjoe", ... }
+	screenName: String,				// "user": { ... , ... , "screen_name": "therealjoe", ... }
+	profileImageUrl: String			// "user": { ... , ... , "profile_image_url_https": **** , ... }
 )
 
 object Tweet {
@@ -22,7 +23,8 @@ object Tweet {
 		(JsPath \ "timestamp_ms").read[String] and
 		(JsPath \ "text").read[String] and
 		(JsPath \ "user" \ "name").read[String] and
-		(JsPath \ "user" \ "screen_name").read[String]
+		(JsPath \ "user" \ "screen_name").read[String] and
+		(JsPath \ "user" \ "profile_image_url_https").read[String]
 	)(Tweet.apply _ )
 
 	implicit val tweetWrites: Writes[Tweet] = (
@@ -31,6 +33,7 @@ object Tweet {
 		(JsPath \ "created_at_ms").write[String] and
 		(JsPath \ "text").write[String] and
 		(JsPath \ "name_user").write[String] and
-		(JsPath \ "name_screen").write[String]
+		(JsPath \ "name_screen").write[String] and
+		(JsPath \ "image_url").write[String]
 	)(unlift(Tweet.unapply))
 }
