@@ -17,6 +17,6 @@ class Application extends Controller {
   }
 
   def sampleJson = Action {
-    Ok(TweetCache.sampleJson)
+    Ok(TweetCache.completeJson)
   }
 }

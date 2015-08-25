@@ -15,20 +15,12 @@ angular.module('twitterstream.services', [])
 	})
 	
 	// Fetches analytics data from the backend
-	.factory('tweetStatsService', [ '$http', function($http) {
-		
+	.factory('tweetStatsService', [ '$http', function($http) {		
 		return {
 			getData: getData	
 		}
 		
 		function getData() {
-			$http.get('/api/sample').then(
-				function(response) {
-					response.data
-				}, 
-				function(response) {
-					console.log("Error: " + response.statusText)
-				}
-			);
+			return $http.get('/api/sample');
 		}
 	}]);

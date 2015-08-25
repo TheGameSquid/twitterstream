@@ -2,6 +2,7 @@ package twitter
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import scala.collection.mutable.ListBuffer
 import scala.util.{Try, Failure, Success}
 
 /** Container for the tweet message received from the stream **/
@@ -14,7 +15,8 @@ case class Tweet(
 	text: String,					// "text"
 	userName: String,				// "user": { ... , ... , "name": "Joe", ... }
 	screenName: String,				// "user": { ... , ... , "screen_name": "therealjoe", ... }
-	profileImageUrl: String		// "user": { ... , ... , "profile_image_url_https": **** , ... }
+	profileImageUrl: String,		// "user": { ... , ... , "profile_image_url_https": **** , ... }
+	hashtags: Option[Seq[String]]
 	//hashTags: Option[List[Map[String, String]]]	// "hashtags" : [ { "text" : "machinelearning", "indices" : [ 107, 123 ] }, { "text" : "javascript", "indices" : [ 124, 135 ] } ] }
 )
 
@@ -27,7 +29,8 @@ object Tweet {
 		(JsPath \ "text").read[String] and
 		(JsPath \ "user" \ "name").read[String] and
 		(JsPath \ "user" \ "screen_name").read[String] and
-		(JsPath \ "user" \ "profile_image_url_https").read[String]
+		(JsPath \ "user" \ "profile_image_url_https").read[String] and
+		(JsPath \ "entities" \ "hashtags" \\ "text").readNullable[ListBuffer[String]].map(s => s)
 	)(Tweet.apply _ )
 
 	implicit val tweetWrites: Writes[Tweet] = (
@@ -38,6 +41,7 @@ object Tweet {
 		(JsPath \ "text").write[String] and
 		(JsPath \ "userName").write[String] and
 		(JsPath \ "screenName").write[String] and
-		(JsPath \ "imageUrl").write[String]
+		(JsPath \ "imageUrl").write[String] and
+		(JsPath \ "hashtags").writeNullable[Seq[String]]
 	)(unlift(Tweet.unapply))
 }

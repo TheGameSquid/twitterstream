@@ -57,8 +57,8 @@ object TweetStream {
 							//(jsonTweet \ "entities" \ "hashtags" \\ "text").map(println _)
 
 							jsonTweet.validate[Tweet] match {
-								case s: JsSuccess[Tweet] => tweetChannel.push(s.get)
-								case e: JsError => println("Unable to validate JsValue as JSON Tweet -> ")// + Json.prettyPrint(jsonTweet))
+								case s: JsSuccess[Tweet] => tweetChannel.push(s.get); println(s.get.hashtags)
+								case e: JsError => println("Unable to validate JsValue as JSON Tweet -> " + Json.prettyPrint(jsonTweet))
 							}
 
 							//println(Json.prettyPrint(jsonTweet))

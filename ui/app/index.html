@@ -4,13 +4,17 @@
     <meta charset="utf-8">
     <title>TwitterStream!</title>
     <link rel="stylesheet" media="screen" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" media="screen" href="bower_components/nvd3/nv.d3.css">
     <link rel="stylesheet" media="screen" href="styles/main.css">
     <link rel="stylesheet" media="screen" href="styles/animations.css">
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/nvd3/nv.d3.js"></script>
     <script src="bower_components/moment/moment.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-moment/angular-moment.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/js/animations.js"></script>
     <script src="scripts/controllers/controllers.js"></script>
@@ -18,9 +22,13 @@
     <script src="scripts/services/services.js"></script>
   </head>
   <body data-ng-app="twitterstream">
-    <div class="jumbotron" align="center">
-      <h1>Welcome to TwitterStream!</h1>
-    </div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header navbar-brand">
+          TwitterStream!
+        </div>
+      </div>
+    </nav>  
     <div class="col-lg-4 view-container" id="tweet-frame">
       <div data-ng-controller="tweetController">
         <div class="tweet-card" data-ng-repeat="tweet in tweets" data-tweet="tweet">
@@ -30,9 +38,7 @@
     <div class="col-lg-4 view-container" id="data-frame">
       Soon there be stats here
       <div data-ng-controller="tweetStatsController">
-        {{stats}}
-        <div class="bars-visualization" data-ng-model="stats" data-stats="stats">
-        </div>
+        <nvd3 options="options" data="data"></nvd3>
       </div>  
     </div>
   </body>
