@@ -1,9 +1,9 @@
 /// <reference path="../../../typings/angularjs/angular.d.ts" />
 
-'user strict'
+'use strict';
 
 angular.module('twitterstream.services', [])
-	.factory('tweetService', function() {
+	.factory('tweetStreamService', function() {
 		var tweetFeed = new EventSource("/feed");
 				
 		return {
@@ -11,4 +11,4 @@ angular.module('twitterstream.services', [])
          		tweetFeed.addEventListener("message", callback, false);
 			}
 		}; 
-	})
+	});

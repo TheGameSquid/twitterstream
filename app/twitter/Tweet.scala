@@ -13,7 +13,8 @@ case class Tweet(
 	text: String,					// "text"
 	userName: String,				// "user": { ... , ... , "name": "Joe", ... }
 	screenName: String,				// "user": { ... , ... , "screen_name": "therealjoe", ... }
-	profileImageUrl: String			// "user": { ... , ... , "profile_image_url_https": **** , ... }
+	profileImageUrl: String		// "user": { ... , ... , "profile_image_url_https": **** , ... }
+	//hashTags: Option[List[Map[String, String]]]	// "hashtags" : [ { "text" : "machinelearning", "indices" : [ 107, 123 ] }, { "text" : "javascript", "indices" : [ 124, 135 ] } ] }
 )
 
 object Tweet {
@@ -25,15 +26,18 @@ object Tweet {
 		(JsPath \ "user" \ "name").read[String] and
 		(JsPath \ "user" \ "screen_name").read[String] and
 		(JsPath \ "user" \ "profile_image_url_https").read[String]
+		//(JsPath \ "entities" \ "hashtags" \\ "text").readNullable[Seq[String]]
+		//(JsPath \ "entities" \ "hashtags" \\ "text").readNullable[List[Map[String, String]]]
 	)(Tweet.apply _ )
 
 	implicit val tweetWrites: Writes[Tweet] = (
 		(JsPath \ "id").write[String] and
-		(JsPath \ "created_at").write[String] and
-		(JsPath \ "created_at_ms").write[String] and
+		(JsPath \ "timeCreated").write[String] and
+		(JsPath \ "timeCreatedMs").write[String] and
 		(JsPath \ "text").write[String] and
-		(JsPath \ "name_user").write[String] and
-		(JsPath \ "name_screen").write[String] and
-		(JsPath \ "image_url").write[String]
+		(JsPath \ "userName").write[String] and
+		(JsPath \ "screenName").write[String] and
+		(JsPath \ "imageUrl").write[String]
+		//(JsPath \ "hashtags").writeNullable[List[Map[String, String]]]
 	)(unlift(Tweet.unapply))
 }

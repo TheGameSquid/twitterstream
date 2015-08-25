@@ -2,7 +2,7 @@ package twitter
 
 import akka.actor.{Props, ActorSystem}
 import play.api.libs.iteratee.{Enumeratee, Iteratee, Concurrent}
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json._
 import play.api.libs.oauth.{ OAuthCalculator, ConsumerKey, RequestToken }
 import play.api.libs.ws.WSResponseHeaders
 
@@ -48,18 +48,20 @@ object TweetStream {
 					println("Handling received chunk")
 					val chunkString = new String(chunk, "UTF-8")
 					buffer append chunkString
-					println(chunkString)
 
 					// This means we're at the end of the message
 					if (chunkString.takeRight(2) == "\r\n" && chunkString.length > 2) {
 						try {
 							val jsonTweet = Json.parse(buffer.toString())
-							println(Json.prettyPrint(jsonTweet))
+
+							//(jsonTweet \ "entities" \ "hashtags" \\ "text").map(println _)
 
 							jsonTweet.validate[Tweet] match {
 								case s: JsSuccess[Tweet] => tweetChannel.push(s.get)
-								case e: JsError => println("Unable to validate JsValue as JSON Tweet")
+								case e: JsError => println("Unable to validate JsValue as JSON Tweet -> ")// + Json.prettyPrint(jsonTweet))
 							}
+
+							//println(Json.prettyPrint(jsonTweet))
 
 							// Clear the buffer
 							buffer.clear()

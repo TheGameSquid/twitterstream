@@ -14,12 +14,12 @@ describe('tweetController', function() {
 			// Fake tweet to be used in test
 			$scope.newTweet = {
 				'id' : '1000000',
-				'created_at' : 'Just now ;)',
-				'created_at_ms' : '1400000',
+				'timeCreated' : 'Just now ;)',
+				'timeCreatedMs' : '1400000',
 				'text': 'Some of these tweets are really lame',
-				'name_user' : 'TwitterStream',
-				'name_screen' : 'therealtwitterstream',
-				'image_url': 'https://twitter.com/8374834738/somepic.png'	
+				'userName' : 'TwitterStream',
+				'screenName' : 'therealtwitterstream',
+				'imageUrl': 'https://twitter.com/8374834738/somepic.png'	
 			};
 			
             $controller('tweetController', {
@@ -45,12 +45,12 @@ describe('tweetController', function() {
 			// GIVEN
             var newTweet = $scope.newTweet;
 
-            // WHEN
-            $scope.addTweet(newTweet);
+            // WHEN        
 			var tweetsToAdd = 100;
 			while(tweetsToAdd--) {
 				$scope.addTweet(newTweet);
 			}
+			$scope.addTweet(newTweet);
 			
 			// THEN
 			expect($scope.tweets.length).toBe(100);

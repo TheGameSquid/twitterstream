@@ -1,16 +1,16 @@
 <div class="tweet">
     <span>
         <a tooltip-placement="bottom" tooltip="Visit Twitter profile" 
-            data-ng-href="http://www.twitter.com/{{tweet.name_screen}}" target="_blank">
-            <img class="tweet-thumbnail" data-ng-src="{{tweet.image_url}}" />
+            data-ng-href="http://www.twitter.com/{{tweet.screenName}}" target="_blank">
+            <img class="tweet-thumbnail" data-ng-src="{{tweet.imageUrl}}" />
         </a>
     </span>
     
     <a tooltip-placement="bottom" tooltip="Visit Twitter profile" 
-        data-ng-href="http://www.twitter.com/{{tweet.name_screen}}" target="_blank">
-        <span class="tweet-username">{{tweet.name_user}}</span>
+        data-ng-href="http://www.twitter.com/{{tweet.screenName}}" target="_blank">
+        <span class="tweet-username">{{tweet.userName}}</span>
     </a>
-    <span class="tweet-screenname">@{{tweet.name_screen}}</span>
-    <span class="tweet-time-ago" am-time-ago="tweet.created_at_unix"></span>
+    <span class="tweet-screenname">@{{tweet.userName}}</span>
+    <span class="tweet-time-ago" am-time-ago="tweet.timeCreatedUnix"></span>
     <div class="tweet-text">{{tweet.text}}</div>
 </div>
