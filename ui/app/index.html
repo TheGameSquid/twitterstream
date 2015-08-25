@@ -21,11 +21,19 @@
     <div class="jumbotron" align="center">
       <h1>Welcome to TwitterStream!</h1>
     </div>
-    <div data-ng-controller="tweetController">
-      <div class="col-lg-4 view-container" id="tweet-frame">
+    <div class="col-lg-4 view-container" id="tweet-frame">
+      <div data-ng-controller="tweetController">
         <div class="tweet-card" data-ng-repeat="tweet in tweets" data-tweet="tweet">
         </div>
       </div>
+    </div>
+    <div class="col-lg-4 view-container" id="data-frame">
+      Soon there be stats here
+      <div data-ng-controller="tweetStatsController">
+        {{stats}}
+        <div class="bars-visualization" data-ng-model="stats" data-stats="stats">
+        </div>
+      </div>  
     </div>
   </body>
 </html>

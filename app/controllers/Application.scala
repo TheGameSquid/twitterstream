@@ -4,6 +4,7 @@ import play.api._
 import play.api.libs.EventSource
 import play.api.mvc._
 import twitter.TweetStream
+import twitter.TweetCache
 
 class Application extends Controller {
   def feed = Action {
@@ -13,5 +14,9 @@ class Application extends Controller {
       // EventSource() -> Enumeratee (Transformer) to transform JsonTweets to Events
       TweetStream.tweetStreamOut through TweetStream.tweetToJson through EventSource()
     ).as("text/event-stream")
+  }
+
+  def sampleJson = Action {
+    Ok(TweetCache.sampleJson)
   }
 }

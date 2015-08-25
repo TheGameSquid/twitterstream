@@ -4,7 +4,8 @@
 
 # Home page
 GET     /                           com.tuplejump.playYeoman.Yeoman.redirectRoot(base="/ui/")
-GET     /feed                       controllers.Application.feed
+GET     /api/feed                   controllers.Application.feed
+GET     /api/sample                 controllers.Application.sampleJson
 GET     /ui                         com.tuplejump.playYeoman.Yeoman.index
 ->      /ui/                        yeoman.Routes
 

@@ -18,4 +18,14 @@ angular.module('twitterstream.controllers', ['twitterstream.services'])
         	var tweet = JSON.parse(response.data);
 			$scope.addTweet(tweet);
       	});
+	}])
+	
+	.controller('tweetStatsController', ['$scope', 'tweetStreamService', 'tweetStatsService', function($scope, tweetStreamService, tweetStatsService) {
+		$scope.stats = { stats: [ { hashtag: "angular", count: 1000 } ] };
+		
+		$scope.addTweet = function(tweet) {
+			//$scope.stats = tweetStatsService.getData();
+			//$scope.stats = { stats: [ { hashtag: "angular", count: 1000 } ] }
+			//$scope.$apply();
+		};
 	}]);
