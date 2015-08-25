@@ -10,7 +10,6 @@ angular.module('twitterstream.controllers', ['twitterstream.services'])
 			if ($scope.tweets.length == 100) {
 				$scope.tweets.pop();
 			}
-			tweet.timeCreatedUnix = tweet.timeCreatedMs.slice(0, -3);
           	$scope.tweets.unshift(tweet);
 			$scope.$apply();
 		};
