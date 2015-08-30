@@ -1,12 +1,15 @@
 package twitter
 
 import akka.actor.{Props, ActorSystem}
+import org.json4s.native.JsonMethods
 import play.api.libs.iteratee.{Enumeratee, Iteratee, Concurrent}
-import play.api.libs.json._
+import play.api.libs.json.JsValue
 import play.api.libs.oauth.{ OAuthCalculator, ConsumerKey, RequestToken }
 import play.api.libs.ws.WSResponseHeaders
-
 import scala.util.{Failure, Success}
+import org.json4s._
+import org.json4s.native._
+import org.json4s.native.JsonMethods._
 
 object TweetStream {
 	val twitterUrl = "https://stream.twitter.com/1.1/statuses/filter.json?track="
@@ -36,8 +39,6 @@ object TweetStream {
 	def tweetIteratee(headers: WSResponseHeaders): Iteratee[Array[Byte], Unit] = {
 		// We're using the default Play! executioncontext
 		import play.api.libs.concurrent.Execution.Implicits.defaultContext
-		// Import the implicit conversion for Json -> Tweet
-		import Tweet.tweetReads
 
 		if (headers.status == 200) {
 			println("Twitter request returned 200")
@@ -52,16 +53,13 @@ object TweetStream {
 					// This means we're at the end of the message
 					if (chunkString.takeRight(2) == "\r\n" && chunkString.length > 2) {
 						try {
-							val jsonTweet = Json.parse(buffer.toString())
+							//val jsonTweet = play.api.libs.json.Json.parse(buffer.toString())
+							val jsonTweet = JsonMethods.parse(buffer.toString())
 
-							//(jsonTweet \ "entities" \ "hashtags" \\ "text").map(println _)
-
-							jsonTweet.validate[Tweet] match {
-								case s: JsSuccess[Tweet] => tweetChannel.push(s.get)
-								case e: JsError => println("Unable to validate JsValue as JSON Tweet -> " + Json.prettyPrint(jsonTweet))
+							Tweet.fromJson(jsonTweet) match {
+								case Success(tweet)	=> tweetChannel.push(tweet)
+								case Failure(ex) 	=> println("Unable to validate JsValue as JSON Tweet -> " + pretty(render(jsonTweet)))
 							}
-
-							//println(Json.prettyPrint(jsonTweet))
 
 							// Clear the buffer
 							buffer.clear()
@@ -83,9 +81,7 @@ object TweetStream {
 	def tweetToJson: Enumeratee[Tweet, JsValue] = {
 		// We're using the default Play! executioncontext
 		import play.api.libs.concurrent.Execution.Implicits.defaultContext
-		// Import the implicit conversion for Tweet -> Json
-		import Tweet.tweetWrites
-		Enumeratee.map[Tweet]{ Json.toJson(_) }
+		Enumeratee.map[Tweet]{ _.toJson }
 	}
 }
 

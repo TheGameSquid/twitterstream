@@ -1,11 +1,10 @@
 package twitter
 
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-import scala.collection.mutable.ListBuffer
+import play.api.libs.json.JsValue
+import org.json4s._
+import org.json4s.native.JsonMethods
+import org.json4s.native.Serialization
 import scala.util.{Try, Failure, Success}
-import argonaut._
-import Argonaut._
 
 /** Container for the tweet message received from the stream **/
 // FIXME: Add potential Geolocation
@@ -17,30 +16,41 @@ case class Tweet(
 	text: String,					// "text"
 	userName: String,				// "user": { ... , ... , "name": "Joe", ... }
 	screenName: String,				// "user": { ... , ... , "screen_name": "therealjoe", ... }
-	profileImageUrl: String		// "user": { ... , ... , "profile_image_url_https": **** , ... }
-	//hashTags: Option[List[Map[String, String]]]	// "hashtags" : [ { "text" : "machinelearning", "indices" : [ 107, 123 ] }, { "text" : "javascript", "indices" : [ 124, 135 ] } ] }
+	profileImageUrl: String,		// "user": { ... , ... , "profile_image_url_https": **** , ... }
+	hashtags: List[String]	// "hashtags" : [ { "text" : "machinelearning", "indices" : [ 107, 123 ] }, { "text" : "javascript", "indices" : [ 124, 135 ] } ] }
 )
+{
+	def toJson: JsValue = {
+		implicit val formats = DefaultFormats
+		import play.api.libs.json._
+
+		Json.parse(Serialization.write(this))
+	}
+}
 
 object Tweet {
-	implicit val tweetReads: Reads[Tweet] = (
-		(JsPath \ "id_str").read[String] and
-		(JsPath \ "created_at").read[String] and
-		(JsPath \ "timestamp_ms").read[String] and
-		(JsPath \ "timestamp_ms").read[String].map(_.dropRight(3)) and
-		(JsPath \ "text").read[String] and
-		(JsPath \ "user" \ "name").read[String] and
-		(JsPath \ "user" \ "screen_name").read[String] and
-		(JsPath \ "user" \ "profile_image_url_https").read[String]
-	)(Tweet.apply _ )
+	def fromJson(jsonTweet: JValue): Try[Tweet] = {
+		implicit val formats = DefaultFormats
 
-	implicit val tweetWrites: Writes[Tweet] = (
-		(JsPath \ "id").write[String] and
-		(JsPath \ "timeCreated").write[String] and
-		(JsPath \ "timeCreatedMs").write[String] and
-		(JsPath \ "timeCreatedUnix").write[String] and
-		(JsPath \ "text").write[String] and
-		(JsPath \ "userName").write[String] and
-		(JsPath \ "screenName").write[String] and
-		(JsPath \ "imageUrl").write[String]
-	)(unlift(Tweet.unapply))
+		try {
+			val id 				= (jsonTweet \ "id").extract[String]
+			val timeCreated 	= (jsonTweet \ "created_at").extract[String]
+			val timeCreatedMs 	= (jsonTweet \ "timestamp_ms").extract[String]
+			val timeCreatedUnix = (jsonTweet \ "timestamp_ms").extract[String].dropRight(3)
+			val text 			= (jsonTweet \ "text").extract[String]
+			val userName 		= (jsonTweet \ "user" \ "name").extract[String]
+			val screenName 		= (jsonTweet \ "user" \ "screen_name").extract[String]
+			val imageUrl 		= (jsonTweet \ "user" \ "profile_image_url_https").extract[String]
+			val hashtags		= (jsonTweet \ "entities" \ "hashtags" \ "text").values match {
+				case hashtag: String 		=> List(hashtag)
+				case hashtags: List[String] => hashtags.distinct
+				//case None 					=> List.empty
+				case _						=> List.empty
+			}
+			Success(Tweet(id, timeCreated, timeCreatedMs, timeCreatedUnix, text, userName, screenName, imageUrl, hashtags))
+		}
+		catch {
+			case _ => Failure(new Exception("Failed to parse the JSON Tweet object"))
+		}
+	}
 }
