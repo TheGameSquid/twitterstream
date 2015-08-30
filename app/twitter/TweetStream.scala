@@ -11,7 +11,7 @@ import scala.util.{Failure, Success}
 object TweetStream {
 	val twitterUrl = "https://stream.twitter.com/1.1/statuses/filter.json?track="
 	//val twitterUrl = "https://stream.twitter.com/1.1/statuses/sample.json"
-	val twitterTopics = "haskell,closure,scala,node.js,javascript,golang,angularjs,reactjs"
+	val twitterTopics = "haskell,clojure,scala,node.js,javascript,golang,angularjs,reactjs"
 
 	/** The TweetStream system and its actors **/
 	val system = ActorSystem("TweetStream")
@@ -57,7 +57,7 @@ object TweetStream {
 							//(jsonTweet \ "entities" \ "hashtags" \\ "text").map(println _)
 
 							jsonTweet.validate[Tweet] match {
-								case s: JsSuccess[Tweet] => tweetChannel.push(s.get); println(s.get.hashtags)
+								case s: JsSuccess[Tweet] => tweetChannel.push(s.get)
 								case e: JsError => println("Unable to validate JsValue as JSON Tweet -> " + Json.prettyPrint(jsonTweet))
 							}
 
